@@ -123,16 +123,8 @@ $(document).ready(function () {
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
 <p>Load required libraries</p>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(ggplot2)</code></pre>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)</code></pre>
 <p>Load data, set up summary data by date and interval to use in the analysis</p>
 <pre class="r"><code>d &lt;- read.csv(&quot;activity/activity.csv&quot;, stringsAsFactors = FALSE)
 dailySteps &lt;- summarize(group_by(d, date), totalSteps = sum(steps))
