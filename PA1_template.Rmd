@@ -27,7 +27,7 @@ intervalSteps <- summarize(group_by(d, interval), avgSteps = mean(steps, na.rm =
 
 ## What is mean total number of steps taken per day?
 
-```{r daily steps histogram}
+```{r daily_steps_histogram}
 hist(dailySteps$totalSteps, main = "Histogram: Total Steps Per Day", xlab = "Steps")
 ```
 
@@ -40,7 +40,7 @@ summary(dailySteps)
 ## What is the average daily activity pattern?
 
 Now we will look at the average steps taken in each 5 minute time slice over the course of a day
-```{r plot avg steps taken for each interval}
+```{r plot_avg_steps_taken_for_each_interval}
 plot(intervalSteps, type = "l", ylab = "Avg. Steps", xlab = "5 Min. Intervals from Midnight", main = "Average Steps per 5 Minute time block per Day")
 ```
 
@@ -65,7 +65,7 @@ dailyStepsNoNA <- summarize(group_by(d_noNA, date), totalSteps = sum(steps))
 ```
 
 Show the average daily steps histogram again, this time with missing values replaced with means
-```{r daily steps with NA replace histogram}
+```{r daily_steps_with_NA_replace_histogram}
 hist(dailyStepsNoNA$totalSteps, main = "Histogram: Total Steps Per Day with missing values replaced", xlab = "Steps")
 ```
 
@@ -91,7 +91,7 @@ d_noNA$DayType <- factor((weekdays(d_noNA$date) %in% c('Saturday','Sunday')), le
 intervalStepsNoNA <- summarize(group_by(d_noNA, interval, DayType), avgSteps = mean(steps))
 ```
 
-```{r plot weekday activity vs. weekend activity}
+```{r plot_weekday_vs_weekend_activity}
 ggplot(data = intervalStepsNoNA, aes(x = interval, y = avgSteps)) + geom_line() + facet_wrap(~ DayType, ncol = 1) + ylab("Avg. Steps") + xlab("5 Min Intervals from Midnight")
 ```
 

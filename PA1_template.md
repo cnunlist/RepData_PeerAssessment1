@@ -27,7 +27,7 @@ intervalSteps <- summarize(group_by(d, interval), avgSteps = mean(steps, na.rm =
 hist(dailySteps$totalSteps, main = "Histogram: Total Steps Per Day", xlab = "Steps")
 ```
 
-![](PA1_template_files/figure-html/daily steps histogram-1.png)<!-- -->
+![](PA1_template_files/figure-html/daily_steps_histogram-1.png)<!-- -->
 
 A look at the statistis for the average daily steps data
 
@@ -55,7 +55,7 @@ Now we will look at the average steps taken in each 5 minute time slice over the
 plot(intervalSteps, type = "l", ylab = "Avg. Steps", xlab = "5 Min. Intervals from Midnight", main = "Average Steps per 5 Minute time block per Day")
 ```
 
-![](PA1_template_files/figure-html/plot avg steps taken for each interval-1.png)<!-- -->
+![](PA1_template_files/figure-html/plot_avg_steps_taken_for_each_interval-1.png)<!-- -->
 
 Calculate the time block that has the most average steps
 
@@ -100,7 +100,7 @@ Show the average daily steps histogram again, this time with missing values repl
 hist(dailyStepsNoNA$totalSteps, main = "Histogram: Total Steps Per Day with missing values replaced", xlab = "Steps")
 ```
 
-![](PA1_template_files/figure-html/daily steps with NA replace histogram-1.png)<!-- -->
+![](PA1_template_files/figure-html/daily_steps_with_NA_replace_histogram-1.png)<!-- -->
 
 Recalculate statistics on the average daily steps data with missing values replaced with means
 
@@ -141,6 +141,6 @@ intervalStepsNoNA <- summarize(group_by(d_noNA, interval, DayType), avgSteps = m
 ggplot(data = intervalStepsNoNA, aes(x = interval, y = avgSteps)) + geom_line() + facet_wrap(~ DayType, ncol = 1) + ylab("Avg. Steps") + xlab("5 Min Intervals from Midnight")
 ```
 
-![](PA1_template_files/figure-html/plot weekday activity vs. weekend activity-1.png)<!-- -->
+![](PA1_template_files/figure-html/plot_weekday_vs_weekend_activity-1.png)<!-- -->
 
 Not surprisingly, there is a noticeably different activity pattern between weekdays and weekends.
