@@ -1,25 +1,40 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 Load required libraries
-```{r load libraries}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 ```
 
 Load data, set up summary data by date and interval to use in the analysis
-```{r load and preprocess data}
+
+```r
 d <- read.csv("activity/activity.csv", stringsAsFactors = FALSE)
 dailySteps <- summarize(group_by(d, date), totalSteps = sum(steps))
 intervalSteps <- summarize(group_by(d, interval), avgSteps = mean(steps, na.rm = TRUE))
@@ -27,37 +42,72 @@ intervalSteps <- summarize(group_by(d, interval), avgSteps = mean(steps, na.rm =
 
 ## What is mean total number of steps taken per day?
 
-```{r daily steps histogram}
+
+```r
 hist(dailySteps$totalSteps, main = "Histogram: Total Steps Per Day", xlab = "Steps")
 ```
 
+![](PA1_template_files/figure-html/daily steps histogram-1.png)<!-- -->
+
 A look at the statistis for the average daily steps data
-```{r calculate mean and median for daily steps}
+
+```r
 summary(dailySteps)
+```
+
+```
+##      date             totalSteps   
+##  Length:61          Min.   :   41  
+##  Class :character   1st Qu.: 8841  
+##  Mode  :character   Median :10765  
+##                     Mean   :10766  
+##                     3rd Qu.:13294  
+##                     Max.   :21194  
+##                     NA's   :8
 ```
 
 
 ## What is the average daily activity pattern?
 
 Now we will look at the average steps taken in each 5 minute time slice over the course of a day
-```{r plot avg steps taken for each interval}
+
+```r
 plot(intervalSteps, type = "l", ylab = "Avg. Steps", xlab = "5 Min. Intervals from Midnight", main = "Average Steps per 5 Minute time block per Day")
 ```
 
+![](PA1_template_files/figure-html/plot avg steps taken for each interval-1.png)<!-- -->
+
 Calculate the time block that has the most average steps
-```{r calculate which 5 min interval has the most average steps}
+
+```r
 intervalSteps[which.max(intervalSteps$avgSteps),]
+```
+
+```
+## # A tibble: 1 × 2
+##   interval avgSteps
+##      <int>    <dbl>
+## 1      835 206.1698
 ```
 
 ## Imputing missing values
 
 Calculate the number of NA records in the dataset
-```{r calculate and report total number of NA records}
+
+```r
 count(d[is.na(d$steps),])
 ```
 
+```
+## # A tibble: 1 × 1
+##       n
+##   <int>
+## 1  2304
+```
+
 For records with missing data, we will use the average value for that interval
-```{r create a new dataset with the NA values replaced by the interval mean}
+
+```r
 d_noNA <- merge(d, intervalSteps, by.x = "interval", by.y = "interval")
 d_noNA <- mutate(d_noNA, steps = ifelse(is.na(steps), avgSteps, steps))
 d_noNA <- mutate(d_noNA, avgSteps = NULL)
@@ -65,13 +115,27 @@ dailyStepsNoNA <- summarize(group_by(d_noNA, date), totalSteps = sum(steps))
 ```
 
 Show the average daily steps histogram again, this time with missing values replaced with means
-```{r daily steps with NA replace histogram}
+
+```r
 hist(dailyStepsNoNA$totalSteps, main = "Histogram: Total Steps Per Day with missing values replaced", xlab = "Steps")
 ```
 
+![](PA1_template_files/figure-html/daily steps with NA replace histogram-1.png)<!-- -->
+
 Recalculate statistics on the average daily steps data with missing values replaced with means
-```{r calculate mean and median for daily steps with NA replaced}
+
+```r
 summary(dailyStepsNoNA)
+```
+
+```
+##      date             totalSteps   
+##  Length:61          Min.   :   41  
+##  Class :character   1st Qu.: 9819  
+##  Mode  :character   Median :10766  
+##                     Mean   :10766  
+##                     3rd Qu.:12811  
+##                     Max.   :21194
 ```
 
 As you can see, replacing missing values with the time slice average value has little impact on the mean and median.
@@ -85,14 +149,18 @@ It does adjust the distribution of values, however, as you can see from the diff
 Now we will investigate whether there is a difference in pattern activity on weekends.
 First we will create a factor with weekend and weekday levels
 
-```{r add weekday/weekend factor}
+
+```r
 d_noNA$date <- as.Date(d_noNA$date)
 d_noNA$DayType <- factor((weekdays(d_noNA$date) %in% c('Saturday','Sunday')), levels = c(TRUE,FALSE), labels= c('weekend','weekday'))
 intervalStepsNoNA <- summarize(group_by(d_noNA, interval, DayType), avgSteps = mean(steps))
 ```
 
-```{r plot weekday activity vs. weekend activity}
+
+```r
 ggplot(data = intervalStepsNoNA, aes(x = interval, y = avgSteps)) + geom_line() + facet_wrap(~ DayType, ncol = 1) + ylab("Avg. Steps") + xlab("5 Min Intervals from Midnight")
 ```
+
+![](PA1_template_files/figure-html/plot weekday activity vs. weekend activity-1.png)<!-- -->
 
 Not surprisingly, there is a noticeably different activity pattern between weekdays and weekends.
